@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NEWS API</title>
+</head>
+<body>
+
+    <button id="business">business</button>
+    <button id="sports">sports</button>
+    <button id="technology">technology</button>
+    <button id="entertainment">entertainment</button>
+
+    <h1>Top 10 News Articles in <span> __________ </span>!</h1>
+
+    <ol></ol>
+    
+
+    <script>
+
+        var btnbus=document.getElementById("business");
+        var btnsp=document.getElementById("sports");
+        var btntec=document.getElementById("technology");
+        var btnen=document.getElementById("entertainment");
+
+        btnbus.addEventListener('click', news);
+        btnsp.addEventListener('click', news);
+        btntec.addEventListener('click', news);
+        btnen.addEventListener('click', news);
+
+
+        function news(values){
+       var xhr = new XMLHttpRequest();
+       var ol = document.querySelector("ol");
+       var span = document.querySelector("span");
+
+       ol.innerHTML=" ";
+
+       var category= values.target.innerText; /*i tried to use values.toElements but it seems that
+       firefox doesn't recognize "event.toElement" */
+       span.innerText=category;
+
+       xhr.onreadystatechange = function(){
+           if(xhr.readyState == 4 && xhr.status == 200)
+           {
+               var response = xhr.responseText;
+               var response_json = JSON.parse(response);
+               
+               for(var i=0; i<10;i++)
+               {
+                   ol.innerHTML += "<li>"+response_json.articles[i].title + "<storng>[" + response_json.articles[i].author + "]</strong>" + "</li>";
+               }
+           }
+       };
+    
+       xhr.open("GET","https://newsapi.org/v2/top-headlines?country=us&category="+ category +"&apiKey=1283a9b71eb2445c94cbdcee79410352", true);
+       xhr.send();
+     };
+   </script>    
+</body>
+</html>
